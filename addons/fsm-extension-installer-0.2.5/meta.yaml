@@ -1,0 +1,8 @@
+name: fsm-extension-installer
+version: 0.2.5
+id: 0786eb14-c568-4463-8a73-0ea899074291
+description: "A simple addon to enable installing FSM extension on Kyma"
+displayName: "FSM Extension Installer For Kyma"
+providerDisplayName: "FSM"
+documentationURL: https://github.com/SAP-samples/fsm-extension-installer-kyma/blob/master/README.md
+tags: FSM, extension-installer, 0.2.5, broker
