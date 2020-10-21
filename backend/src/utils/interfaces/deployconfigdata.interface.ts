@@ -5,6 +5,7 @@ export interface DeployConfigData {
     namespace: string, // Namespace for will be deployed location
     parameterValues: string, // JSON object for deployed parameter values via helm chart
     appVersion: string,
+    outletPositions: string[],
     lastHelmContent: {
         helmRelease: string,
         namespace: string

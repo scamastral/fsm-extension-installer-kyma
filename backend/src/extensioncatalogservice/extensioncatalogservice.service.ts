@@ -41,6 +41,7 @@ export class ExtensionCatalogService {
         namespace: (deploymentObj.deploymentConfig && deploymentObj.deploymentConfig.namespace) ? deploymentObj.deploymentConfig.namespace : INSTALLER_NAMESPACE,
         parameterValues: deploymentObj.deploymentConfig ? deploymentObj.deploymentConfig.values : null,
         appVersion: deploymentObj.extension.version,
+        outletPositions: deploymentObj.extension.outletPositions ? deploymentObj.extension.outletPositions : [],
         chartConfigData: {
           repository: deploymentObj.extension.artifactConfig.chart.repository,
           ref: deploymentObj.extension.artifactConfig.chart.ref,
@@ -114,6 +115,31 @@ export class ExtensionCatalogService {
       await this.httpService.post(url, data, config).toPromise();
     } catch (error) {
       this.loggerService.error(error.toString(), null, null, deployResultData);
+      throw error;
+    }
+  }
+
+  public async createExtensionAssignment(updatedDeployData: UpdatedDeployData, outletPosition: string) {
+    try {
+      const extensionDeploymentId = updatedDeployData.extensionDeploymentId;
+      const url = KYMA_SERVICE_CLASS_GATEWAY_URL +
+        `/api/extension-catalog/v1/extension-assignments/${extensionDeploymentId}`;
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Account-Id': updatedDeployData.accountId,
+          'X-Company-Id': updatedDeployData.companyId
+        }
+      } as AxiosRequestConfig;
+      const data = {
+        targetType: 'OUTLET_POSITION',
+        target: outletPosition,
+        extensionDeploymentId: extensionDeploymentId
+      };
+
+      await this.httpService.post(url, data, config).toPromise();
+    } catch (error) {
+      this.loggerService.error(error.toString(), null, null, updatedDeployData);
       throw error;
     }
   }

@@ -84,6 +84,13 @@ export class InstallerService {
             this.loggerService.log(`Step${stepNum++}, Add helmRelease:${helmResult.name} and namespace:${helmResult.namespace} to Extension Deployment Result table.`, null, requestData);
             await this.updateHelmValueToDeploymentResult(requestData, helmResult);
 
+            // automatically assign extension if only 1 outlet position is specified
+            if (deployConfigData.outletPositions && deployConfigData.outletPositions.length === 1) {
+                const outletPosition = deployConfigData.outletPositions[0];
+                this.loggerService.log(`Step${stepNum++}, Automatically assigning extension to outlet position ${outletPosition}`);
+                await this.extensionCatalogService.createExtensionAssignment(updatedDeployData, outletPosition);
+            }
+
             this.loggerService.log(`Successfully finish install or upgrade workflow!`, null, requestData);
         } catch (error) {
             const state = isUpgradeFlow ? 'UPDATE_FAILED' : 'INSTALL_FAILED';
